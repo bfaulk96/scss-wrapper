@@ -20,6 +20,7 @@ if [[ $folderName =~ ^[A-Za-z0-9_-]+$ ]]; then
     [[ $file == *"src"* ]] &&
     ! grep -q "$prefix" "$file" &&
     ! grep -q "@import" "$file"; then
+      tabs 2
       sed -i '' 's/^/\\t/' "$file" &&
       echo -e "$prefix\n$(cat $file)\n$suffix" > "$file"
       echo "Wrapper has been added to $file"
