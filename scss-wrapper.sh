@@ -18,14 +18,18 @@ if [[ $folderName =~ ^[A-Za-z0-9_-]+$ ]]; then
   for file in $(find . -regex ".*/*.scss"); do
     if [[ $file != *"node_modules"* ]] &&
     [[ $file == *"src"* ]] &&
+    [[ $file != *"styles.scss"* ]] &&
+    [[ $file != *"variables.scss"* ]] &&
     ! grep -q "$prefix" "$file" &&
-    ! grep -q "@import" "$file"; then
+    (! grep -q "@import" "$file" || grep -q "@import.*variables" "$file"); then
       tabs 2
       sed -i '' 's/^/\\t/' "$file" &&
       echo -e "$prefix\n$(cat $file)\n$suffix" > "$file"
       echo "Wrapper has been added to $file"
     else
-      if [[ $file == *"node_modules"* ]]; then
+      if [[ $file == *"node_modules"* ]] ||
+      [[ $file == *"styles.scss"* ]] ||
+      [[ $file == *"variables.scss"* ]]; then
           continue
       else
         if grep -q "@import" "$file"; then
